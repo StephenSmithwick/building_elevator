@@ -1,0 +1,5 @@
+[tool.ruff]
+lint.select = ["ALL"]
+lint.ignore = [ "D100", "D203", "D211", "D213", "I001", "S101"]
+lint.flake8-annotations.mypy-init-return = true
+lint.exclude = ["*_test.py"]
