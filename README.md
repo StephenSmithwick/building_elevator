@@ -1,13 +1,21 @@
-There are many elevator models currently available.  For this repo I will suppose an elevator with
-system with floor request buttons on the floor which should allow for more interesting optimization
-of elevator logic.
+# Elevator
 
-# Requirements
-Given `n` elevators and `m` floors
-1. A user on floor i will be able to request any other floor calling for an elevator.
+This Python code is an exercise in implementing the logic to control an Elevator in a few simple Python classes.
 
-# Running the code
-## Setup
+## Design Principles
+The following principles have guided the requirements documented below
+1. Minimize the time passengers spend in the elevator
+2. Minimize the time passengers spend waiting on the elevator
+
+## Requirements
+- An elevator will continue in the same direction once it starts picking up passengers to reduce travel time.
+- It will pick up as many passengers as possible along its route to minimize wait times.
+- If no passengers have been picked up yet, the elevator can adjust its planned route in any direction.
+- If a passenger has begun a journey, the elevator can adjust it planned route up-to the current level of the elevator.
+- An elevator will only pick up a passenger when moving in their intended direction.
+
+## Getting Started
+Start by creating a virtual environment and installing the requirements.
 
 ```bash
 python3 -m venv venv
@@ -15,16 +23,22 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+## Running & Testing the Elevator class
 
-## Tests
-
-```
+To run all tests
+```bash
 pytest
+```
+
+To run a specific test
+```bash
+pytest -k [test name]
 ```
 
 
 ## Linting
 
-```
+For consistent formatting:
+```bash
 ruff check
 ```
