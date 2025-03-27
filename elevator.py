@@ -8,7 +8,7 @@ class Door(Enum):
     SHUT = 2
 
 class Route:
-    """A series of Elevator Stops in the same direction."""
+    """A series of stops in the same direction."""
 
     def __init__(self, start: int, end: int):
         """Initialize route with initial request details.
@@ -20,16 +20,19 @@ class Route:
         self.up = start < end
         self.stops = [start, end]
 
-    def start_if_ready(self, current: int) -> None:
-        """Mark the route as started if th.
-
-        Started routes can only grow up to the current level when merging.
-        """
-        self.started = (
-            self.started
-            or (self.up and current <= self.stops[0])
-            or (not self.up and current >= self.stops[0])
+    def is_after(self, level: int) -> bool:
+        """Return True if route starts after :level:."""
+        return (
+            (self.up and level <= self.stops[0])
+            or (not self.up and level >= self.stops[0])
         )
+
+    def start(self) -> None:
+        """Mark the route as started.
+
+        Started routes can only grow up to the current floor when merging.
+        """
+        self.started = True
 
     def mergable(self, current_level: int, start: int, end: int) -> bool:
         """Return if route is eligible to be merged with requested start & end."""
@@ -91,8 +94,8 @@ class Elevator:
             merge_route.merge(start, end)
         else:
             route = Route(start, end)
-            if not self.routes:
-                route.start_if_ready(self.level)
+            if route.is_after(self.level) and not self.routes:
+                route.start()
             self.routes.append(route)
 
     def move(self) -> None:
@@ -109,7 +112,7 @@ class Elevator:
                 route.pop()
                 if route.empty():
                     self.routes.pop(0)
-                else:
-                    route.start_if_ready(self.level)
+                elif route.is_after(self.level):
+                    route.start()
             else:
                 self.level += 1 if route.next_stop() > self.level else -1
